@@ -16,10 +16,17 @@ import { getDb } from './db';
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
+		const t0 = performance.now();
+
 		const db = getDb(env);
 
 		const result = await db.select().from(users);
 
-		return Response.json(result);
+		const t1 = performance.now();
+
+		return Response.json({
+			rows: result,
+			queryTimeMs: t1 - t0,
+		});
 	},
 } satisfies ExportedHandler<Env>;
